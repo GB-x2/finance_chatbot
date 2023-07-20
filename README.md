@@ -1,7 +1,7 @@
 # Notes on Rasa `3.x/ 2.x / 1.x`
 
 1. The `main` branch of this repo is compatible with Rasa Open Source **version 3.x**
-2. The bot for **Rasa 1.x** can be found in the [rasa-1 branch](https://github.com/RasaHQ/financial-demo/tree/rasa-1).
+2. The bot for **Rasa 1.x** can be found in the [rasa-1 branch](https://github.com/GB-x2/finance_chatbot/tree/rasa-1).
 
 
 
@@ -113,7 +113,7 @@ You can also try out your bot locally using Rasa X by running
 rasa x
 ```
 
-Refer to our guided workflow in the [Wiki page](https://github.com/RasaHQ/financial-demo/wiki/Using-Rasa-X-with-the-Financial-Demo) for how to get started with Rasa X in local mode.
+Refer to our guided workflow in the [Wiki page](https://github.com/GB-x2/finance_chatbot/wiki/Using-Rasa-X-with-the-Financial-Demo) for how to get started with Rasa X in local mode.
 
 
 ## Overview of the files
@@ -169,7 +169,7 @@ If configured, the bot can also hand off to another bot in response to the user 
 ## Handoff
 
 This bot includes a simple skill for handing off the conversation to another bot or a human.
-This demo relies on [this fork of chatroom](https://github.com/RasaHQ/chatroom) to work, however you
+This demo relies on [this fork of chatroom](https://github.com/GB-x2/chatroom_ui) to work, however you
 could implement similar behaviour in another channel and then use that instead. See the chatroom README for
 more details on channel-side configuration.
 
@@ -183,7 +183,7 @@ Using the default set up, the handoff skill enables this kind of conversation wi
 
 The simplest way to use the handoff feature is to do the following:
 
-1. Clone [chatroom](https://github.com/RasaHQ/chatroom) and [Helpdesk-Assistant](https://github.com/RasaHQ/helpdesk-assistant) alongside this repo
+1. Clone [chatroom](https://github.com/GB-x2/chatroom_ui) and [Helpdesk-Assistant](https://github.com/GB-x2/helpdesk_chatbot) alongside this repo
 2. In the chatroom repo, install the dependencies:
 ```bash
 yarn install
@@ -263,7 +263,7 @@ Handoff hosts can be other locally running rasa bots, or anything that serves re
 accepts. If a handoff host is not a rasa bot, you will of course want to update the response text to tell the user
 who/what they are being handed off to.
 
-The [Helpdesk-Assistant](https://github.com/RasaHQ/helpdesk-assistant) bot has been set up to handle handoff in exactly the same way as Helpdesk-Assistant,
+The [Helpdesk-Assistant](https://github.com/GB-x2/helpdesk_chatbot) bot has been set up to handle handoff in exactly the same way as Helpdesk-Assistant,
 so the simplest way to see handoff in action is to clone Financial-Demo alongside this repo.
 
 If you list other locally running bots as handoff hosts, make sure the ports on which the various rasa servers & action servers are running do not conflict with each other.
@@ -337,35 +337,35 @@ The pipeline uses GitHub Actions, defined in  `.github/workflows/cicd.yml`. It i
 
 ![](images/cicd.png)
 
-**[params](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L26)**
+**[params](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L26)**
 
 - Defines parameters for use by downstream jobs
 
-**[params_summary](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L125)**
+**[params_summary](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L125)**
 
 - Prints the value of the parameters.
 
-**[action_server](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L156)**
+**[action_server](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L156)**
 
 - Builds & Tests the docker image of the action server with tag: `<branch-name>`
 - Uploads the docker image to the AWS ECR repository: `financial-demo`
 
-**[rasa_model](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L203)**
+**[rasa_model](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L203)**
 
 - Trains & Tests the rasa model with name: `models/<branch-name>.tar.gz
 - Uploads the trained model to the AWS S3 bucket: `rasa-financial-demo` 
 
-**[aws_eks_create_test_cluster](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L242)**
+**[aws_eks_create_test_cluster](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L242)**
 
 - If not existing yet, creates an AWS EKS cluster with name: `financial-demo-<branch-name>`
 
-**[deploy_to_test_cluster](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L266)**
+**[deploy_to_test_cluster](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L266)**
 
 - Installs/Updates Rasa Enterprise, with the docker image created by the **action_server** job.
 - Deploys the rasa model, trained by the **rasa_model** job.
 - Performs smoke tests to ensure basic operations are all OK.
 
-**[deploy_to_prod_cluster](https://github.com/RasaHQ/financial-demo/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L353)**
+**[deploy_to_prod_cluster](https://github.com/GB-x2/finance_chatbot/blob/d40467b4fb2a7d4fb072b86a2828a8cec662eb63/.github/workflows/cicd.yml#L353)**
 
 - Runs when pushing to the `main` branch, and all previous steps are successful.
 - Installs/Updates Rasa Enterprise, with the docker image created by the **action_server** job.
@@ -817,8 +817,8 @@ Once propagated, you can access Rasa Enterprise at **http://aws-financial-demo.m
 
 If something goes wrong with the CI/CD pipeline, you should:
 
-- Browse the [workflow logs](https://github.com/RasaHQ/financial-demo/actions)
-- Peek in [.github/workflows/cicd.yml](https://github.com/RasaHQ/financial-demo/blob/main/.github/workflows/cicd.yml) to see what the pipeline is doing at the moment of trouble
+- Browse the [workflow logs](https://github.com/GB-x2/finance_chatbot/actions)
+- Peek in [.github/workflows/cicd.yml](https://github.com/GB-x2/finance_chatbot/blob/main/.github/workflows/cicd.yml) to see what the pipeline is doing at the moment of trouble
 - Trouble shoot it from your local computer
 
 The following steps will most likely reveal what is going wrong: 
