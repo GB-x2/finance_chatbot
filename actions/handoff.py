@@ -58,22 +58,22 @@ class ActionHandoff(Action):
 
         handoff_bot = handoff_config.get(handoff_to, {})
 
-        url = "http://3.145.51.33:5005"
+        url = handoff_bot.get("url")
         
         print(f"URL :: {url}")
         if url:
-            # if tracker.get_latest_input_channel() == "rest":
-            print("Inside")
-            dispatcher.utter_message(
-                json_message={
-                    "handoff_host": url,
-                    "title": "Helpdesk Assistant",
-                }
-            )
-            # else:
-            #     dispatcher.utter_message(
-            #         template="utter_wouldve_handed_off", handoffhost=url
-            #     )
+            if tracker.get_latest_input_channel() == "rest":
+                print("Inside")
+                dispatcher.utter_message(
+                    json_message={
+                        "handoff_host": url,
+                        "title": "Helpdesk Assistant",
+                    }
+                )
+            else:
+                dispatcher.utter_message(
+                    template="utter_wouldve_handed_off", handoffhost=url
+                )
         else:
             dispatcher.utter_message(template="utter_no_handoff")
 
